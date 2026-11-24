@@ -4,9 +4,27 @@
 - **Jože**: `abcfdc4` (veja `joze-sproti`), čist izvoz commita; številke vrstic veljajo za ta commit. **Jure**: `prevzem/` v repozitoriju Kratochwill, veja `jure-zapornica`, commit `468eafb`, drevo čisto (`git status` brez sprememb). Datum: 2026-11-24. Nič ni bilo zagnano; vse je branje kode, diff in grep.
 - **Kako brati oznake**: *podatek (OK)* = vrednost je v yaml, katalogu ali tekstovni datoteki restavracije: zamenjaš datoteko, kode ne diraš. *koda (problem)* = vrednost ali pravilo je v `.py`: za novo restavracijo je treba urediti kodo.
 
+## 0. Popravki popisa (preverjanje 2026-11-24, naloga F1-6)
+
+Preverjeno na `abcfdc4` (Jože, `git archive`) in `468eafb` (Jure). Celotna meritev: `00-system/napake/porocila/f1-6-trismerno-2026-11-24.md`. Skica poti do »samo podatki«: `prevzem-podatki-skica.md`.
+
+| Trditev v tem popisu | Stanje | Dokaz |
+|---|---|---|
+| »1214 dodanih in 130 odstranjenih vrstic v 18 datotekah« | **NAPAČNO / ni ponovljivo**. Tabela 3.1 se sama sešteje v +1392 / −133 (mešane osnove po datoteki), število 1214 pa je dolžina `narocilo_joze.py` (`joze-jedro-narocila.md`). Veljavno: glej razdelek 3.1a | `git diff --numstat` |
+| »5 novih modulov, 456 vrstic« | potrjeno | `wc -l`: 105 + 199 + 69 + 39 + 44 |
+| »13 mest `if JURE`/`jure()`: `app.py` 10, `klic_jj.py` 2, `zakljucek.py` 1« | potrjeno; v `flows.py` je 0 mest po imenu agenta (tam se bere polje profila) | `grep -nE '\bJURE\b|\bjure\(\)|is profil\.PREVZEM_BTC'` po `govor/ jedro/ oddaja/ vhodi/` |
+| »8 stikal v profilu« | potrjeno | `profil.py:142-149` |
+| »yaml: 41 ključev odstranjenih, 51 dodanih; 265 proti 275; pečenost 25 proti 27 ključev« | potrjeno (gnezdeni ključi) | `yaml.safe_load` obeh `restavracija.yaml` |
+| »0 zadetkov v Jožetu« za imena v razdelku 3 | potrjeno za imena v kodi z opombama: `lazna_potrditev_modela` je v Jožetovem testu `test_zapornica_k14.py:273` (kjer piše, da je Jože nima), `VELIKOSTNE_BESEDE` kot konstanta obstaja (`katalog_narocila.py:65,674`). Zadetek po imenu ne dokaže, da Jože nima enakovrednega popravka (npr. `govor_po_kodinem_zapisu`, `jozef_model_govori` v `flows.py`). `menu_spotter` se v Jožetu pojavi v `flows.py` (18 vrstic) in `katalog_narocila.py` (1); v `app.py` in `klic_jj.py` ne | `grep -rIl` po izvozu |
+| 29 `datoteka:vrstica` iz T1 do T10 (npr. `prevzem_govor.py:368`, `narocilo_joze.py:181,208,1159`, `tts_priprava.py:47`, `flows.py:5611`, `katalog_narocila.py:611`, `profil.py:194`, `nastavitev.py:145`) | 29 od 29 ustreza vsebini | `sed -n` na `abcfdc4` |
+| 301 zmožnosti, 6 brez testa, 132 `VEZ-` | štetje vrstic se ujema (skripta in samostojni grep: 301 ID vrstic, 132 enoličnih `VEZ-` ID v popisih in v dodatku, ni dvojnih ID). To je štetje vrstic, ne dokaz pravilnosti vsebine | `preveri_popise.py` in `grep -c` |
+| Razred B »splošni popravek jedra«, ki ga Jože nima (`lazna_potrditev_modela`, zapornica obvod, `menu_spotter` s/z, velikostne besede, »sem se zmotil«, `_enako_ime_vprasanje`) | **popravljeno**: SPLOŠNO je samo ~94 od 1673 Jurejevih lastnih vrstic (6 %); `jedi_modela` (le ob `katalog.ponudba`) in `razlicica_*` (le ob `govor.ze_zapisano`) sta za stikalom, torej NOVA ZMOŽNOST; `_enako_ime_vprasanje` in `menu_spotter` imata vez na restavracijo (skupina `'pizze'`, »K pici«) | poročilo F1-6, razdelek 3 |
+| Seznam `spremenjene_datoteke` v Juretovem `IZVOR.json` je nepopoln | potrjeno (manjkajo `menu_spotter.py`, `joze_priloge.py`, `joze_cakajoce.py`) | `IZVOR.json` |
+| Nič ni bilo zagnano | potrjeno tudi zdaj: v okolju ni `pytest` ne `pipecat` | `python3 -c "import pytest"` |
+
 ## 1. Povzetek (odgovor na vprašanje)
 
-**Jedro še ni »samo podatki«.** Jure je dokaz: nastal je iz Jožeta z dodanimi 1214 vrsticami in 130 odstranjenimi v 18 obstoječih datotekah, plus 5 novimi moduli (456 vrstic: `cas_cakanja`, `jedilnik_btc`, `oddaja_btc`, `neoddano_jsonl`, `prevezava_nazaj`). V kodi je 8 stikal, ki jih je moral dodati v profil, in 13 mest, kjer koda sprašuje »ali sem Jure« (`JURE`, `jure()`, `PREVZEM_BTC`).
+**Jedro še ni »samo podatki«.** Jure je dokaz: nastal je iz Jožeta (`df02294`) z dodanimi 1794 vrsticami in 97 odstranjenimi v 18 obstoječih datotekah (proti današnjemu Jožetu `abcfdc4`: 21 datotek, +1584 / −1111, ker Jože ima od tedaj 27 commitov, ki jih Jure nima), plus 5 novimi moduli (456 vrstic: `cas_cakanja`, `jedilnik_btc`, `oddaja_btc`, `neoddano_jsonl`, `prevezava_nazaj`). V kodi je 8 stikal, ki jih je moral dodati v profil, in 13 mest, kjer koda sprašuje »ali sem Jure« (`JURE`, `jure()`, `PREVZEM_BTC`).
 
 Večino dodanega ni »J&J proti Kratochwillu«, ampak **nove zmožnosti, ki jih Kratochwill potrebuje** (čas čakanja, povratni klic, ponudba iz jedilnika). To je v redu, če so vklopljene s podatkom. Slabše so tri druge stvari: (a) stikala so v Pythonu (`profil.py`), ne v yaml; (b) besedila, regexi in imena datotek so po agentu zapisani v kodi; (c) J&J-pojmi (pečenost, tehtane jedi, domača kola) so v jedru vezani na imena: vedenje spi, če katalog teh imen nima, a blok `govor.pecenost` ostane obvezen za nalaganje, zato ga Jure drži kot prazen ostanek.
 
@@ -64,7 +82,7 @@ Razvrščeno po tem, kaj je **aktivno za vsako restavracijo** in kaj je Jure **m
 
 ## 3. Jure proti Jožetu: kaj je moral spremeniti v KODI
 
-**Metoda.** Za vsako datoteko v `prevzem/` sem vzel najbližji Jožetov commit (najmanjša razlika med `7c24286`, `df02294`, `19cc929`, `d2f97f6`, `63e1aa2`, `c821a03`, `910e156`, `ae527c6`, `abcfdc4`) in naredil `diff`. Ker Jure po `IZVOR.json` sproti prenaša Jožetove popravke (Entrim `63e1aa2`/`c821a03`, R4a `ae527c6`, k17 `d2f97f6`), so v številkah tudi taki prenosi; število je zato zgornja meja za »Jure samo«. Podatkovnih datotek (yaml, besedilo) in testov nisem štel med kodo. Seznam `spremenjene_datoteke` v Juretovem `IZVOR.json` je nepopoln: `joze_priloge.py` (89 vrstic razlike), `menu_spotter.py` (28) in `joze_cakajoce.py` (2) se razlikujejo, a niso navedeni; zaupati je diffu.
+**Metoda (prvotna, zamenjana z razdelkom 3.1a).** Za vsako datoteko v `prevzem/` sem vzel najbližji Jožetov commit (najmanjša razlika med `7c24286`, `df02294`, `19cc929`, `d2f97f6`, `63e1aa2`, `c821a03`, `910e156`, `ae527c6`, `abcfdc4`) in naredil `diff`. Ker Jure po `IZVOR.json` sproti prenaša Jožetove popravke (Entrim `63e1aa2`/`c821a03`, R4a `ae527c6`, k17 `d2f97f6`), so v številkah tudi taki prenosi; število je zato zgornja meja za »Jure samo«. Podatkovnih datotek (yaml, besedilo) in testov nisem štel med kodo. Seznam `spremenjene_datoteke` v Juretovem `IZVOR.json` je nepopoln: `joze_priloge.py` (89 vrstic razlike), `menu_spotter.py` (28) in `joze_cakajoce.py` (2) se razlikujejo, a niso navedeni; zaupati je diffu.
 
 **Preverjeno proti današnjemu Jožetu `abcfdc4`** (grep po `govor/`, `jedro/`, `nastavitve/`, `oddaja/`, `vhodi/`): imena `lazna_potrditev_modela`, `_nosilec_v_stavku`, `potrditev_namesto_zapornice`, `jozef_stavki_modela_odpadejo`, `_enako_ime_vprasanje`, `ponovitev_kratko`, `razlicica_je_ponovitev`, `kolicina_skupaj`, `jure_povzetek`, `izteci_vkljucena_vprasanja`, `ze_vkljuceno_samo_ista`, `_priloga_pripeta_k_jedi`, `jedi_modela`, `cas_cakanja`, `povratni_klic`, `rezervacija_nazaj`, `brez_cen`, `alergija_zastavica`, `sheet_zapis`, veja za velikostne besede ob pijači in fraza »sem se zmotil« v varovalu: **0 zadetkov**, torej Jože teh stvari danes nima. `oznake_so_razlocljive` Jože ima (razred D).
 
@@ -95,6 +113,18 @@ Razredi: **A** = nova zmožnost, ki jo agent potrebuje (potrebuje kodo, ne podat
 
 **Nove datoteke (koda):** `jedro/moduli/cas_cakanja.py` (105 vrstic), `jedro/moduli/jedilnik_btc.py` (199, prepis Bojanovega `jedilnik.py`), `oddaja/oddaja_btc.py` (69), `oddaja/neoddano_jsonl.py` (39), `govor/prevezava_nazaj.py` (44). Nove podatkovne datoteke: `nastavitve/btc/restavracija.yaml` (287 vrstic), pozdrav, prompt, 5 promptov `prompt_jure_*`, `pozdrav_jure.txt`. Testi `tests/jure/`: 285 testov v 25 datotekah (štetje `def test_`; nezagnano).
 
+### 3.1a Izmerjeno: ena osnova, številke (F1-6, 2026-11-24)
+
+Zgornja tabela 3.1 uporablja različno osnovo po datoteki, zato so njene številke (+/−) le približne (skupaj +1392 / −133). Veljavne so te, vse z `git diff --numstat` na `*.py` brez `tests/`; osnova je `df02294` (`izvor.commit` v Juretovem `IZVOR.json`; zadnji, a delen prenos `ae527c6` je neprimeren: proti njemu Jure »odstrani«, kar je Jože dodal po `df02294`).
+
+| Primerjava | Obstoječe datoteke | Nove datoteke |
+|---|---|---|
+| Jure proti `df02294` | 18 datotek, +1794 / −97 | 5 datotek, +456 |
+| Jože `abcfdc4` proti `df02294` | 9 datotek, +1311 / −87 | |
+| **Jure proti `abcfdc4`** | **21 datotek, +1584 / −1111** | 5 datotek, +456 |
+
+Po vrsticah (neprazne vrstice, množica; ocena, ne commiti): skupno 334 (večinoma Jože→Jure, k17 in Entrim; Jure→Jože vsaj `mreza_tisina_po_zavrnitvi` in »neznana beseda« cd7d604), samo Jure 1670, samo Jože 851. Poskusno spajanje (`git merge-file`): 22 konfliktov v 5 datotekah (`flows.py` 15, `prevzem_govor.py` 4, `app.py`, `menu_spotter.py`, `narocilo_joze.py` po 1). Jurejevih lastnih 1673 vrstic: NOVA ZMOŽNOST ~1400, RESTAVRACIJA ~180, SPLOŠNO ~94 (moja razvrstitev po funkcijah). Tabela po datotekah in sklep o osnovi: poročilo F1-6.
+
 ### 3.2 Stikala Jureta
 
 | Stikalo | Kje | Stanje | Ocena |
@@ -113,7 +143,7 @@ Razredi: **A** = nova zmožnost, ki jo agent potrebuje (potrebuje kodo, ne podat
 
 ## 4. Kaj ni preverjeno
 
-- Koliko od 1214 dodanih vrstic je res samo Jurejevih (razdelitev po razredih A do D je moja razvrstitev hunkov, ne meritev po vrsticah).
+- Razdelitev Jurejevih vrstic po razredih je moja razvrstitev po funkcijah (±10 %), ne meritev; meritve so samo številke iz `git diff --numstat` in štetje vrstic v razdelku 3.1a.
 - Ali Jure z današnjim `abcfdc4` kot izvorom zgradi (testi niso bili zagnani).
 - Trud (majhno/srednje/veliko): presoja.
 - `skupno/` (urnik, jedilnik, izgovor, `tabela_sheet`) v Kratochwillu je zunaj `prevzem/`; njegove vsebine nisem bral.
