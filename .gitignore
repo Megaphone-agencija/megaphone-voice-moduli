@@ -1,0 +1,7 @@
+# Izvajalne datoteke (nastajajo ob zagonu, niso del kode)
+stanje-stetja.json
+opozorila.log
+.stej.lock
+__pycache__/
+*.pyc
+*.bak*

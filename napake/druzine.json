@@ -1,0 +1,360 @@
+{
+ "verzija": 1,
+ "vir": "druzine.md 2026-11-20 (zaprt seznam; strojni vir je ta datoteka)",
+ "druzine": [
+  {
+   "stevilka": 1,
+   "slug": "vrednost-modela-brez-dokaza",
+   "ime": "Vrednost modela brez dokaza",
+   "statistika": "73 (Večer 40, Jože 26, Jana 5, Jure 2), ponavljanje 34",
+   "definicija": "koda vzame klic modela dobesedno, tudi kadar vrednost, polje, možnost ali sklic gost ni rekel ali je rekel drugače. Druga oblika: naknadna preverba »je to v gostovih besedah« je preozka ali preširoka.",
+   "sodi": [
+    "d5cbeb5 (Jože): gost reče »Še slanino gor«, model pa pošlje »za vse jedi«.",
+    "942a382 (Jože): Jože reče »Pečenosti izberi žal nimamo«, čeprav gost take besede ni rekel.",
+    "Pri Večeru 2d16831: »priti« / »prit« se zavrne."
+   ],
+   "ne_sodi": [],
+   "krog": "model je vir resnice, koda pa poskuša za njim dokazati, da je vrednost res povedana, po bližini besed. Vsaka nova oblika je bodisi preozka bodisi preširoka. Večerjeva veriga števnikov a30d620 → 5e3d0d5 → c948c0f → c67e0fe sama zapiše »se vrti v krogu«.",
+   "kandidat": "obrni smer.\n- Model pove samo, na katero vprašanje ali polje gost odgovarja.\n- Vrednost izpelje koda iz gostove izjave proti zaprtemu naboru (dnevi, števniki, ponujene možnosti odprtega vprašanja).\n- Ko je ne najde, vpraša, namesto da sprejme modelovo.\n- Pri Jožetu: odgovor na »Ste mislili …?« razreši koda proti ponujenim možnostim, modelov argument je samo namig.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 2,
+   "slug": "pomen-po-seznamu-besed",
+   "ime": "Pomen po seznamu besed",
+   "statistika": "45 (Prebil 18, Večer 14, Jože 8, Jana 4, Bojan 1), ponavljanje 25",
+   "definicija": "koda presodi namen izjave (ja/ne, dovoljenje za oddajo, slovo, »v redu«, »kaj?«, zanikanje) po seznamu besed ali enem signalu, brez sobesedila.",
+   "sodi": [
+    "9009f4c (Prebil): »Ja, lahko daš.« je zavrnjen, povzetek prebran osemkrat.",
+    "2958148 (Jana): »V redu, hvala za pomoč. Nasvidenje.« velja za potrditev povzetka."
+   ],
+   "ne_sodi": [],
+   "krog": "Vsaka nova oblika (»ne, ni treba«, »kar daj«, »Ja, seveda, ne.«) je nova vrstica v seznamu. Preširok seznam spusti napačne (575b57e: »mhm«; 406322c). Vsak agent ima svoj seznam.",
+   "kandidat": "ena skupna funkcija v jedru »razvrsti odgovor na zastavljeno vprašanje«.\n- Dobi besedilo vprašanja in celo izjavo.\n- Vrne da / ne / vprašanje / nejasno.\n- Deterministična je samo za kratke čiste oblike, sicer model izbira iz zaprtega nabora.\n- »Nejasno« vedno pomeni, da vpraša znova.\n- Regresija je en korpus resničnih odgovorov iz vseh klicev vseh agentov.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 3,
+   "slug": "besedilo-ali-izgovor",
+   "ime": "Besedilo ali izgovor",
+   "statistika": "37 (Jože 15, Jana 10, Večer 6, Prebil 3, drugi 3), ponavljanje 16",
+   "definicija": "Zapisi izgovora so bili fonetične ocene brez poslušanja. Tabele ulic in krajev so se dopolnjevale trikrat (1c8053b, e438ffe, 36de7e2).",
+   "sodi": [
+    "1c8053b (Večer): »Slov Bistrica«.",
+    "a477e53 (Jože): »0,33 L«.",
+    "ebe79c2: 33 od 113 zapisov izgovora je bilo napačnih."
+   ],
+   "ne_sodi": [],
+   "krog": "Zapisi izgovora so bili fonetične ocene brez poslušanja. Tabele ulic in krajev so se dopolnjevale trikrat (1c8053b, e438ffe, 36de7e2).",
+   "kandidat": "- En skupni modul »pripravi besedilo za glas« (števila, okrajšave, tuja imena) in en slovar izgovora za vse agente.\n- Ti ga preveriš s poslušanjem enkrat.\n- Test gre čez VSE vnose baze in kataloga, ne primer za primerom.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 4,
+   "slug": "vezava-na-napacen-dogodek",
+   "ime": "Vezava na napačen dogodek",
+   "statistika": "25 (Prebil 8, Jože 6, Jana 4, Večer 4, FD 2, Jure 1), ponavljanje 15",
+   "definicija": "dogodki se povežejo po vrstnem redu, števcu ali času. Primer je Prebilova veriga svežine izjave 54335b1 → 0b716d5 → 2a0915d → 48344f0.",
+   "sodi": [
+    "0b716d5 (Prebil): gost reče »Ne, priimek je Novak«, staro orodje pa nato priimek prepiše.",
+    "a2dc2d3 (Jože): gostov »ja« razreši tudi drugo, še nerešeno pijačo."
+   ],
+   "ne_sodi": [],
+   "krog": "dogodki se povežejo po vrstnem redu, števcu ali času. Primer je Prebilova veriga svežine izjave 54335b1 → 0b716d5 → 2a0915d → 48344f0.",
+   "kandidat": "vsak dogodek nosi identiteto (id izjave, vprašanja, stavka). Odgovor in orodje se vežeta na id; v jedru je ena vrsta odprtih vprašanj z id-ji.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 5,
+   "slug": "iskanje-v-katalogu-ali-evidenci",
+   "ime": "Iskanje v katalogu ali evidenci",
+   "statistika": "25 (Jože 20, Večer 4, Jana 1), ponavljanje 6",
+   "definicija": "Vsak sklon, umlaut in vzdevek posebej. Poti za jedi, priloge in dodatke so imele različna iskanja (94c1f41).",
+   "sodi": [
+    "471db60 (Večer): »Kovač« za »Kovačič«.",
+    "93f9670 (Jože): »tesarjevo solato«.",
+    "4793447: Römerquelle."
+   ],
+   "ne_sodi": [],
+   "krog": "Vsak sklon, umlaut in vzdevek posebej. Poti za jedi, priloge in dodatke so imele različna iskanja (94c1f41).",
+   "kandidat": "ena normalizacija in en iskalnik za vse poti. Test čez cel katalog krat vsi skloni.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 6,
+   "slug": "obrat-brez-govorca",
+   "ime": "Obrat brez govorca",
+   "statistika": "24 (Večer 7, Jana 6, Jože 5, FD 3, Prebil 2, Jure 1), ponavljanje 6",
+   "definicija": "vsaka pot, kjer nihče ne spregovori, je zakrpana posebej (rok tu, ujeta izjema tam).",
+   "sodi": [
+    "1c7eb24 (Jana): reče »Hvala.« in utihne.",
+    "1c59cb4 (Jure): na »O, 4.« molči.",
+    "de4a884 (Jože): na »Ja?« molči."
+   ],
+   "ne_sodi": [],
+   "krog": "vsaka pot, kjer nihče ne spregovori, je zakrpana posebej (rok tu, ujeta izjema tam).",
+   "kandidat": "ena nespremenljiva zahteva cevovoda: po vsaki gostovi izjavi mora v X sekundah priti zvok. En nadzornik obrata za vse agente ob izteku izgovori kodni stavek.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 7,
+   "slug": "slisanost-napacen-dokaz",
+   "ime": "Slišanost: napačen dokaz",
+   "statistika": "23 (Jana 9, Prebil 4, Večer 4, FD 3, Jože 3), ponavljanje 13",
+   "definicija": "dokaz se je menjal (časovnik, BotStoppedSpeaking, zadnja beseda, katerakoli oznaka) in vsak je imel luknjo. Kopije v FD so imele iste luknje (bde41e1).",
+   "sodi": [
+    "dd87310 (Jana): povzetek velja za slišanega 0,65 s pred koncem zvoka.",
+    "4e4771e (FD): po napaki TTS odda, gost pa ni slišal."
+   ],
+   "ne_sodi": [],
+   "krog": "dokaz se je menjal (časovnik, BotStoppedSpeaking, zadnja beseda, katerakoli oznaka) in vsak je imel luknjo. Kopije v FD so imele iste luknje (bde41e1).",
+   "kandidat": "en vir resnice, Asteriskova oznaka predvajanja za ID točno tega stavka. Vsaka negotovost pomeni »ni slišano«, zato agent ponovi. En modul za vse.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 8,
+   "slug": "oblika-vrednosti-ni-znana",
+   "ime": "Oblika vrednosti ni znana",
+   "statistika": "23 (Večer 13, Jože 3, Jana 2, Bojan 2, Prebil 2, FD 1), ponavljanje 11",
+   "definicija": "vsak agent ima svoj razčlenjevalnik časa, ki se širi obliko za obliko.",
+   "sodi": [
+    "a30d620 (Večer): »oktobra je bilo dvakrat na začetku«.",
+    "fba67fe (FD): sprejme »prejšnji petek«.",
+    "20673ef: »zdaj že drugi dan«."
+   ],
+   "ne_sodi": [],
+   "krog": "vsak agent ima svoj razčlenjevalnik časa, ki se širi obliko za obliko.",
+   "kandidat": "en skupni razčlenjevalnik časa in datuma ter en korpus govorjenih oblik iz vseh klicev. Nova oblika je vrstica v korpusu, ne nova koda.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 9,
+   "slug": "novo-prepise-staro",
+   "ime": "Novo prepiše staro",
+   "statistika": "22 (Večer 11, Jana 4, Prebil 3, FD 2, Jože 2), ponavljanje 6",
+   "definicija": "podatkovni model ima eno mesto za nekaj, česar je lahko več. Primeri: ena rešitev za vse dni, ena čakajoča razjasnitev, ena zastavica.",
+   "sodi": [
+    "c25040e (FD): »alergija na arašide … brez glutena«, arašidi izginejo.",
+    "56f8e86 (Večer): »pa naj se odpiše tudi za petek« zamenja dneve.",
+    "462699e (Jana): zavrnitev termina izbriše osebe."
+   ],
+   "ne_sodi": [],
+   "krog": "podatkovni model ima eno mesto za nekaj, česar je lahko več. Primeri: ena rešitev za vse dni, ena čakajoča razjasnitev, ena zastavica.",
+   "kandidat": "zapis kot seznam dejanj (dodaj / popravi / odstrani), ki se združijo. Brisanje samo ob izrecnem popravku. Mest je toliko, kolikor stvari obstaja.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 10,
+   "slug": "dva-govorca-isti-obrat",
+   "ime": "Dva govorca v istem obratu",
+   "statistika": "20 (Jana 9, Jože 6, FD 2, Prebil 2, Jure 1), ponavljanje 7",
+   "definicija": "dušenje modela velja samo na delu poti (56370d9 samo za »Hvala.«, 093f967 samo ob nekaterih poteh).",
+   "sodi": [
+    "dd38529 (Jana): model reče »Torej Jaka Test, štiri osebe …«, nato še kodni povzetek.",
+    "fc18bf1 (Jože): gost dvakrat sliši »Imamo več možnosti«."
+   ],
+   "ne_sodi": [],
+   "krog": "dušenje modela velja samo na delu poti (56370d9 samo za »Hvala.«, 093f967 samo ob nekaterih poteh).",
+   "kandidat": "en govorec na obrat, odločen PRED govorom, na enem mestu cevovoda za vse poti. To je mehanizem 2, dosledno izveden.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 11,
+   "slug": "model-ne-zapise-povedanega",
+   "ime": "Model ne zapiše povedanega",
+   "statistika": "20 (Jože 14, Prebil 4, Večer 1, Bojan 1), ponavljanje 11",
+   "definicija": "varovalka tiho dopiše izpuščeno, a omembo bere brez namena. Zanikanje postane naročilo: 6c6d6cc (»Ne bom Cheese in Cockte«), 4a49b46, bdd2aef.",
+   "sodi": [
+    "dad4c01 (Jože): »pa eno to vašo Coca-Colo«, listek je nima.",
+    "07c5652 (Bojan): model izpusti »v sredo«."
+   ],
+   "ne_sodi": [],
+   "krog": "varovalka tiho dopiše izpuščeno, a omembo bere brez namena. Zanikanje postane naročilo: 6c6d6cc (»Ne bom Cheese in Cockte«), 4a49b46, bdd2aef.",
+   "kandidat": "preverba »vse omenjeno je zapisano« naj ne zapisuje sama, ampak VPRAŠA (»Ste rekli tudi Coca-Colo?«). Vprašanje je varno ob dvomu, tihi zapis ni.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 12,
+   "slug": "model-oblikuje-stalni-stavek",
+   "ime": "Model oblikuje stalni stavek",
+   "statistika": "19 (Prebil 7, Jana 6, Večer 5, Jože 1), ponavljanje 11",
+   "definicija": "vsak nov podatek v prostem besedilu modela je nova zakrpa navodila (Janina veriga navodil za orodja v2–v6, Prebilov opis z zgledi).",
+   "sodi": [
+    "6c23adc (Prebil): v e-pošti je »Klima je crknila«.",
+    "7a194b8 (Večer): model prosto preoblikuje odobrena vprašanja."
+   ],
+   "ne_sodi": [],
+   "krog": "vsak nov podatek v prostem besedilu modela je nova zakrpa navodila (Janina veriga navodil za orodja v2–v6, Prebilov opis z zgledi).",
+   "kandidat": "načelo mehanizma 1 do konca. Vsak stavek z obvezno vsebino (povzetek, potrditev, roki, obljube) je predloga v kodi; model govori samo prosto besedilo brez podatkov.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 13,
+   "slug": "prekinitev-pokvari-stanje",
+   "ime": "Prekinitev pokvari stanje",
+   "statistika": "19 (Večer 10, Jana 6, Jože 1, FD 1, Prebil 1), ponavljanje 7",
+   "definicija": "vsako vozlišče ima svoje zastavice za prekinitev. Večerjeva veriga kratkih potrditev in umaknjenih vprašanj (b7f29eb, a4f82e8, 105de10, 601e288) je popravljala eno zastavico za drugo.",
+   "sodi": [
+    "b7f29eb (Večer): »Ja.« med vprašanjem se zavrže, vprašanje se ponovi petkrat.",
+    "e3835e2 (Jože): po »Halo?« prekinjeno vprašanje izgine."
+   ],
+   "ne_sodi": [],
+   "krog": "vsako vozlišče ima svoje zastavice za prekinitev. Večerjeva veriga kratkih potrditev in umaknjenih vprašanj (b7f29eb, a4f82e8, 105de10, 601e288) je popravljala eno zastavico za drugo.",
+   "kandidat": "prekinitev je en dogodek z enim pravilom: kar ni bilo slišano do konca, ni izrečeno. Odprta vprašanja ostanejo odprta. Ena koda namesto zastavic po vozliščih. Povezano s 7.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 14,
+   "slug": "pravilo-v-promptu-izgubljeno-ali-protislovno",
+   "ime": "Pravilo v promptu izgubljeno ali protislovno",
+   "statistika": "18 (Jana 12, Jože 3, Večer 3), ponavljanje 10",
+   "definicija": "krčenje in razrez promptov sta pravila tiho izgubljala, opazili smo jih šele v klicu (Jana db6e133, bf6ed8d, af4e3c8 v dveh dneh).",
+   "sodi": [
+    "c89a4bf (Večer): pravilo »NI čas dogodka« je izginilo pri krajšanju.",
+    "3030b10 (Jana): načelo 3 (vprašaj) in načelo 4 (zapiši takoj) za isti primer."
+   ],
+   "ne_sodi": [],
+   "krog": "krčenje in razrez promptov sta pravila tiho izgubljala, opazili smo jih šele v klicu (Jana db6e133, bf6ed8d, af4e3c8 v dveh dneh).",
+   "kandidat": "vsako pravilo prompta ima vsaj en scenarij. Prompt se sme krčiti šele, ko so vsi zeleni.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 15,
+   "slug": "vprasanje-v-zanki",
+   "ime": "Vprašanje v zanki",
+   "statistika": "15 (Jože 8, Jure 2, Prebil 2, Večer 1, FD 1, Jana 1), ponavljanje 4",
+   "definicija": "pravilo proti ponovitvi je pokrivalo eno vrsto vprašanj za drugo (pečenost in teža, nato izbira jedi f2c18bf, nato vsa vprašanja c2e8e0b).",
+   "sodi": [
+    "6d9d123 (Jože): stara vprašanja po vsaki izjavi, šestkrat.",
+    "72dc043 (Jure): zanka pri »še tatarska omaka«.",
+    "f2c18bf (Jože): trikrat »imamo več možnosti«."
+   ],
+   "ne_sodi": [],
+   "krog": "pravilo proti ponovitvi je pokrivalo eno vrsto vprašanj za drugo (pečenost in teža, nato izbira jedi f2c18bf, nato vsa vprašanja c2e8e0b).",
+   "kandidat": "stanje vprašanj v jedru (kaj, kolikokrat, s katerimi besedami), ena meja ponovitev in druga oblika ob ponovitvi. Danes pravilo gleda samo zadnje vprašanje (c2e8e0b).",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 16,
+   "slug": "jed-dvakrat-na-listku",
+   "ime": "Jed dvakrat na listku",
+   "statistika": "15 (Jože 14, Jure 1), ponavljanje 7",
+   "definicija": "po pregledu podvajanja (drug agent, 20. 11.) jedro vsak ponovljen `dodaj` sešteje brez dokaza, da gre za nov kos. Zato ena vrata v jedru: »dokaz za nov kos«.",
+   "sodi": [
+    "9640545: »en ocvrti sir« postane petkrat ocvrti sir.",
+    "1618050: »… potem bi pa še en ribeye steak.« postane »Dvakrat Ribeye Steak ameriški«.",
+    "9b521d1: gost reče samo »Ja.«, jed pride na listek drugič."
+   ],
+   "ne_sodi": [
+    "Pomfri pri siru (priloga že v jedi, katalog ne ve zanjo): sodi v priloga-ze-v-jedi, ker je vzrok drug."
+   ],
+   "krog": "",
+   "kandidat": "",
+   "pojasnilo": "- Popravek količine »ne, ne petkrat sir, enkrat« (e19495f) sem dal v to družino, ker je vzrok isti seštevanje v jedru.\n- Pomfri pri siru sem dal v ločeno družino 22, ker je vzrok drug (katalog ne ve, da je priloga že v jedi). S tem odstopam od primera v nalogi, ki je pomfri štel sem.\n- Pad thai (20. 11.) še ni commitan, zato ga v tabeli ni."
+  },
+  {
+   "stevilka": 17,
+   "slug": "notranje-besedilo-na-glas",
+   "ime": "Notranje besedilo na glas",
+   "statistika": "14 (Jana 10, Jože 4), ponavljanje 8",
+   "definicija": "seznam prepovedanih fraz se širi: angleške, slovenske, imena polj, navodila, celo homoglifi (1449a5b).",
+   "sodi": [
+    "a070618: »Poslal sem party_size 4.«",
+    "cc96b21 (Jože): model gostu izreče lastno napako."
+   ],
+   "ne_sodi": [],
+   "krog": "seznam prepovedanih fraz se širi: angleške, slovenske, imena polj, navodila, celo homoglifi (1449a5b).",
+   "kandidat": "obrni preverbo. V glas gre samo besedilo, ki prestane pozitivno preverbo. Seznam imen polj in orodij se ustvari samodejno iz sheme, ne ročno.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 18,
+   "slug": "zunanji-ponudnik",
+   "ime": "Zunanji ponudnik",
+   "statistika": "12 (Jana 5, Jože 3, Večer 2, skupno 2), ponavljanje 2",
+   "definicija": "ni verige zakrp, a isti popravek je bil narejen dvakrat na dveh mestih.",
+   "sodi": [
+    "6482ec4: Soniox 401.",
+    "fc7fa0f in 74db35e: isti popravek dvakrat (Entrim pošlje dve jedi v enem kosu, »Radenska pa Fanta«)."
+   ],
+   "ne_sodi": [],
+   "krog": "ni verige zakrp, a isti popravek je bil narejen dvakrat na dveh mestih.",
+   "kandidat": "dimni test pogodbe za vsakega ponudnika ob zagonu in ena izvedba v skupnem modulu.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 19,
+   "slug": "oddaja-odloci-model",
+   "ime": "Oddajo odloči model",
+   "statistika": "9 (Jana 5, FD 2, Jure 1, Prebil 1), ponavljanje 5",
+   "definicija": "vsak agent je odkril isto posebej (Jana 14. 10., FD 5. 11., Jure 13. 11.), ker rešitev ni bila skupni modul.",
+   "sodi": [
+    "651ccc3 (Jana): »Rezervacija je potrjena. Nasvidenje.« pred oddajo.",
+    "8b2a072 (Jure): »Naročilo je oddano«, preden je bilo res oddano."
+   ],
+   "ne_sodi": [],
+   "krog": "vsak agent je odkril isto posebej (Jana 14. 10., FD 5. 11., Jure 13. 11.), ker rešitev ni bila skupni modul.",
+   "kandidat": "stanje oddaje samo v kodi. Stavke o oddaji in koncu govori koda po dejanski oddaji, kot to že dela zapornica.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 20,
+   "slug": "vprasa-za-znan-podatek",
+   "ime": "Vpraša za znan podatek",
+   "statistika": "7 (Jana 6, FD 1), ponavljanje 5",
+   "definicija": "pravilo v promptu se je zaostrovalo v štirih dneh (785b551, 19b816c, 616ee65), dokler ga ni prevzela koda.",
+   "sodi": [
+    "9a531bb (Jana): »Na katero številko vam pošljemo potrditev po SMS-u?«, čeprav je številka znana.",
+    "54a1166 (FD): po »Vsi sedem hodov« vpraša »Za katerega gosta je to?«."
+   ],
+   "ne_sodi": [],
+   "krog": "pravilo v promptu se je zaostrovalo v štirih dneh (785b551, 19b816c, 616ee65), dokler ga ni prevzela koda.",
+   "kandidat": "filter vprašanj po znanih poljih v kodi (616ee65 je to že začel). Pravila v promptu so pogojna.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 21,
+   "slug": "prepis-brez-prilagoditve",
+   "ime": "Prepis brez prilagoditve",
+   "statistika": "5 (Prebil 2, FD 1, Jože 1, skupno 1)",
+   "definicija": "ni verige zakrp; vsakič druga točka, odvisna od agenta.",
+   "sodi": [
+    "779e752 (FD): moški glas reče »zabeležila«.",
+    "c3d41d5 (Prebil): obrnjena polarnost »ne«."
+   ],
+   "ne_sodi": [],
+   "krog": "ni verige zakrp; vsakič druga točka, odvisna od agenta.",
+   "kandidat": "zemljevid modulov v gradnja-agentov za vsak modul našteje, kaj je odvisno od agenta (spol, polarnost, časi, ključi nastavitev). Prepis brez preverbe teh točk ne gre skozi.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 22,
+   "slug": "priloga-ze-v-jedi",
+   "ime": "Priloga že v jedi",
+   "statistika": "5 (Jure 4, Jože 1), ponavljanje 4",
+   "definicija": "pri Juretu štirje commiti v dveh urah 18. 11. (2a63988 → 70cf6a0 → 6ca86f0 → 5cdce29), vsak je popravljal posledico prejšnjega.",
+   "sodi": [
+    "2a63988 (Jure): »cvrt sir s pomfrijem« doda še samostojni pomfri.",
+    "2e9f926 (Jože): dollar chips, ki so že v perutničkah."
+   ],
+   "ne_sodi": [],
+   "krog": "pri Juretu štirje commiti v dveh urah 18. 11. (2a63988 → 70cf6a0 → 6ca86f0 → 5cdce29), vsak je popravljal posledico prejšnjega.",
+   "kandidat": "podatek `vkljuceno` v vseh katalogih in ena pot v jedru. Po pregledu podvajanja je pri Juretu že rešeno v podatkih.",
+   "pojasnilo": ""
+  },
+  {
+   "stevilka": 23,
+   "slug": "drugo",
+   "ime": "Drugo (mešani commiti ali brez opisa)",
+   "statistika": "19",
+   "definicija": "Mešani commiti z več napakami ali brez opisa (npr. b27d820 »štirje popravki jedra«). Hook mora tudi `drugo` šteti kot družino, sicer je izhod v sili. Ob `drugo` predlagaj Chebu novo družino.",
+   "sodi": [
+    "b27d820: štirje popravki jedra"
+   ],
+   "ne_sodi": [],
+   "krog": "",
+   "kandidat": "",
+   "pojasnilo": ""
+  }
+ ]
+}

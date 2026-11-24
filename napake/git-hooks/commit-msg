@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""commit-msg: preveri vrstice Vrsta/Družina/Podvrsta (MAIOS napake, F0-1).
+
+Način je v datoteki `nacin` ob tem hooku: `opozori` (stderr, izhod 0) ali
+`zavrni` (izhod 1). Okoljska spremenljivka NAPAKE_NACIN ima prednost (za teste).
+Hook nikoli ne sme zrušiti commita zaradi lastne napake: kar ni kršitev, je izhod 0.
+"""
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+PODVRSTE = ("funkcija", "test", "dokument", "izvor", "cl", "infra", "refaktor", "orodje")
+MAPA = Path(__file__).resolve().parent
+
+
+def nacin():
+    n = os.environ.get("NAPAKE_NACIN")
+    if not n:
+        try:
+            n = (MAPA / "nacin").read_text(encoding="utf-8").strip()
+        except OSError:
+            n = "opozori"
+    return n if n in ("opozori", "zavrni") else "opozori"
+
+
+def slugi():
+    pot = Path(os.environ.get("NAPAKE_DRUZINE") or MAPA.parent / "druzine.json")
+    with open(pot, encoding="utf-8") as f:
+        return {d["slug"] for d in json.load(f)["druzine"]}
+
+
+def kršitve(sporocilo, veljavne):
+    vrstice = [v for v in sporocilo.splitlines() if not v.startswith("#")]
+    besedilo = "\n".join(vrstice)
+    prva = next((v for v in vrstice if v.strip()), "")
+    # Merge in fixup!/squash! so izvzeti.
+    if re.match(r"(?i)^(merge\b|fixup!|squash!)", prva.strip()):
+        return []
+    m = re.search(r"(?m)^Vrsta:\s*(\S+)", besedilo)
+    if not m:
+        return ["manjka vrstica `Vrsta: popravek` ali `Vrsta: ni-popravek`"]
+    vrsta = m.group(1).lower()
+    if vrsta == "popravek":
+        d = re.search(r"(?m)^Družina:\s*(\S+)", besedilo)
+        if not d:
+            return ["`Vrsta: popravek` brez vrstice `Družina: <slug>`"]
+        if d.group(1) not in veljavne:
+            return ["družina `%s` ni na seznamu (druzine.json); ne ustreza nobena? uporabi `drugo`" % d.group(1)]
+        return []
+    if vrsta == "ni-popravek":
+        izid = []
+        if "(prej:" in prva:
+            izid.append("prva vrstica vsebuje »(prej:« — pri `Vrsta: ni-popravek` tega ne piši")
+        p = re.search(r"(?m)^Podvrsta:\s*(\S+)", besedilo)
+        if not p or p.group(1) not in PODVRSTE:
+            izid.append("`Vrsta: ni-popravek` potrebuje `Podvrsta: %s`" % "|".join(PODVRSTE))
+        return izid
+    return ["neznana vrsta `%s` (dovoljeno: popravek | ni-popravek)" % m.group(1)]
+
+
+def main():
+    try:
+        sporocilo = Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+        napake = kršitve(sporocilo, slugi())
+    except Exception as e:  # lastna napaka hooka ne sme blokirati commita
+        print("commit-msg: preverba je odpovedala (%s), commit gre naprej" % e, file=sys.stderr)
+        return 0
+    if not napake:
+        return 0
+    n = nacin()
+    glava = "OPOZORILO" if n == "opozori" else "ZAVRNJENO"
+    print("commit-msg %s (napake/git-hooks, način: %s):" % (glava, n), file=sys.stderr)
+    for k in napake:
+        print("  - " + k, file=sys.stderr)
+    print("  Primer: zadnji vrstici sporočila `Vrsta: popravek` + `Družina: <slug iz druzine.json>`"
+          " ali `Vrsta: ni-popravek` + `Podvrsta: funkcija`.", file=sys.stderr)
+    return 1 if n == "zavrni" else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
