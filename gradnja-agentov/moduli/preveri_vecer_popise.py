@@ -7,7 +7,7 @@ Uporaba:
   python3 preveri_vecer_popise.py /tmp/vecer-izvoz --vzorec 40  # izpiše 40 naključnih navedenih vrstic (pot:vrstica -> besedilo) za ročni pregled
 
 Preveri: (1) vsaka `pot:vrstica` obstaja in vrstica ni prek konca datoteke; (2) vsak `tests/...py::ime` obstaja kot `def ime`;
-(3) prešteje zmožnosti (ID `XXX-nn`), vrstice z »ni testa« in vrstice `VEZ-*` po kategoriji. Nič ne zažene in ničesar ne spremeni.
+(3) prešteje zmožnosti (ID `XXX-nn`), vrstice, kjer je celica testa »ni testa« (in posebej tiste, kjer se »ni testa« pojavi samo delno) in vrstice `VEZ-*` po kategoriji. Nič ne zažene in ničesar ne spremeni.
 Izhodna koda 0 = vse poti in testi obstajajo.
 """
 import collections
@@ -55,7 +55,7 @@ def main():
 
     for datoteka in sorted(glob.glob(os.path.join(MAPA, "vecer-*.md"))):
         ime_d = os.path.basename(datoteka)
-        zm = nt = 0
+        zm = nt = delno = 0
         vez = collections.Counter()
         for vrstica in open(datoteka, encoding="utf-8"):
             m = re.match(r"\|\s*((?:VEZ-)?[A-Z]{3}-\d+)\s*\|", vrstica)
@@ -66,7 +66,11 @@ def main():
                     vez[celice[3] if len(celice) > 3 else "?"] += 1
             elif m and ime_d != "vecer-samo-podatki.md":
                 zm += 1
-                nt += "ni testa" in vrstica.lower()
+                celice_t = [c.strip() for c in vrstica.strip().strip("|").split("|")]
+                if celice_t[-1].lower().startswith("ni testa"):
+                    nt += 1
+                elif "ni testa" in vrstica.lower():
+                    delno += 1
             for pot, st in re.findall(r"`?(" + PREDPONE + r"/[\w./-]+\.(?:py|yaml|txt|md|sh|json|html|js|conf|service|yml|example)):(\d+)", vrstica):
                 v = vrstice(pot)
                 vse_poti.append((ime_d, id_, pot, int(st)))
@@ -78,9 +82,10 @@ def main():
                 if not ima_test(pot, t):
                     napake.append((ime_d, id_, "test ne obstaja", f"{pot}::{t}"))
         if ime_d != "vecer-samo-podatki.md":
-            print(f"{ime_d}: zmožnosti {zm}, brez testa {nt}, VEZ {sum(vez.values())} {dict(vez)}")
+            print(f"{ime_d}: zmožnosti {zm}, brez testa {nt} (delno {delno}), VEZ {sum(vez.values())} {dict(vez)}")
         skupaj["zmožnosti"] += zm
         skupaj["brez testa"] += nt
+        skupaj["delno brez testa"] += delno
         skupaj["VEZ"] += sum(vez.values())
     print("SKUPAJ", dict(skupaj), "navedenih pot:vrstica", len(vse_poti))
     for n in napake:
